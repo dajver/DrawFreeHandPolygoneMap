@@ -102,7 +102,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         polygonOptions.addAll(createOuterBounds());
         polygonOptions.strokeColor(colorPrimary);
         polygonOptions.strokeWidth(20);
-
         polygonOptions.addHole(latLngArrayList);
 
         Polygon polygon = googleMap.addPolygon(polygonOptions);
