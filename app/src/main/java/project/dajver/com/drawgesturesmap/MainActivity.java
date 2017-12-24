@@ -2,7 +2,6 @@ package project.dajver.com.drawgesturesmap;
 
 import android.graphics.Point;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -18,6 +17,7 @@ import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindColor;
 import butterknife.BindView;
@@ -43,6 +43,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     Button drawBtn;
     @BindColor(R.color.colorPrimary)
     int colorPrimary;
+    @BindColor(R.color.transparentGray)
+    int transparentGray;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,20 +68,43 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (latLngArrayList.size() > 1) {
             googleMap.addPolyline(new PolylineOptions().add(
                     latLngArrayList.get(source),
-                    latLngArrayList.get(destination)).width(8).color(colorPrimary)
+                    latLngArrayList.get(destination))
+                    .width(20)
+                    .color(colorPrimary)
             );
             source++;
             destination++;
         }
     }
 
+    private List<LatLng> createOuterBounds() {
+        final float delta = 0.01f;
+
+        return new ArrayList<LatLng>() {{
+            add(new LatLng(90 - delta, -180 + delta));
+            add(new LatLng(0, -180 + delta));
+            add(new LatLng(-90 + delta, -180 + delta));
+            add(new LatLng(-90 + delta, 0));
+            add(new LatLng(-90 + delta, 180 - delta));
+            add(new LatLng(0, 180 - delta));
+            add(new LatLng(90 - delta, 180 - delta));
+            add(new LatLng(90 - delta, 0));
+            add(new LatLng(90 - delta, -180 + delta));
+        }};
+    }
+
+
     private void drawFinalPolygon() {
         latLngArrayList.add(latLngArrayList.get(0));
+
         PolygonOptions polygonOptions = new PolygonOptions();
-        polygonOptions.addAll(latLngArrayList);
-        polygonOptions.strokeColor(ContextCompat.getColor(this, R.color.colorPrimary));
-        polygonOptions.strokeWidth(10);
-//        polygonOptions.fillColor(ContextCompat.getColor(this, R.color.colorPrimary));
+        polygonOptions.fillColor(transparentGray);
+        polygonOptions.addAll(createOuterBounds());
+        polygonOptions.strokeColor(colorPrimary);
+        polygonOptions.strokeWidth(20);
+
+        polygonOptions.addHole(latLngArrayList);
+
         Polygon polygon = googleMap.addPolygon(polygonOptions);
 
         for(LatLng latLng : polygon.getPoints()) {
