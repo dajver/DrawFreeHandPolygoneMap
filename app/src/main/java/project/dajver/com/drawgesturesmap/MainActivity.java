@@ -11,6 +11,7 @@ import android.widget.FrameLayout;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
@@ -23,7 +24,6 @@ import butterknife.BindColor;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import project.dajver.com.drawgesturesmap.map.MySupportMapFragment;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, View.OnTouchListener {
 
@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        MySupportMapFragment customMapFragment = ((MySupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map));
+        SupportMapFragment customMapFragment = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map));
         customMapFragment.getMapAsync(this);
     }
 
